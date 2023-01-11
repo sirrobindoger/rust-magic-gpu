@@ -8,6 +8,9 @@ use winit::{
 
 mod state;
 mod vertex;
+mod texture;
+mod camera;
+mod cameracontroller;
 
 use state::State;
 use log::debug;
