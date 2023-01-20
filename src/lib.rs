@@ -11,6 +11,7 @@ mod vertex;
 mod texture;
 mod camera;
 mod cameracontroller;
+mod engine;
 
 use state::State;
 use log::debug;

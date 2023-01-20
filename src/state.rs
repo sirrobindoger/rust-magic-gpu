@@ -4,7 +4,7 @@ use winit::{window::Window, event::WindowEvent};
 use crate::cameracontroller::CameraController;
 use crate::vertex::{VERTICES, Vertex, INDICES};
 use crate::texture::Texture;
-use crate::camera::{Camera, self, CameraUniform};
+use crate::camera::{Camera, CameraUniform};
 
 pub struct State {
     pub surface: wgpu::Surface,
