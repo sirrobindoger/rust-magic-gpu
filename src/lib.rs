@@ -8,7 +8,6 @@ use winit::{
 
 mod state;
 mod vertex;
-mod texture;
 mod camera;
 mod cameracontroller;
 mod engine;

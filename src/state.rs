@@ -5,6 +5,7 @@ use crate::cameracontroller::CameraController;
 use crate::vertex::{VERTICES, Vertex, INDICES};
 use crate::texture::Texture;
 use crate::camera::{Camera, CameraUniform};
+use crate::engine::renderkit::RenderKit;
 
 pub struct State {
     pub surface: wgpu::Surface,
@@ -34,33 +35,7 @@ impl State {
     pub async fn new(window: &Window) -> Self {
         let size = window.inner_size();
 
-        // The instance is a handle to our GPU
-        let instance = wgpu::Instance::new(wgpu::Backends::all());
-        let surface = unsafe { instance.create_surface(window) };
-        let adapter = instance.request_adapter(
-            &wgpu::RequestAdapterOptions {
-                power_preference: wgpu::PowerPreference::default(),
-                compatible_surface: Some(&surface),
-                force_fallback_adapter: false,
-            },
-        ).await.unwrap();
-        let (device, queue) = adapter.request_device(
-            &wgpu::DeviceDescriptor {
-                label: None,
-                limits: wgpu::Limits::default(),
-                features: wgpu::Features::empty()
-            },
-            None
-        ).await.unwrap();
-        let config = wgpu::SurfaceConfiguration {
-            usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
-            format: surface.get_supported_formats(&adapter)[0],
-            width: size.width,
-            height: size.height,
-            present_mode: wgpu::PresentMode::Fifo,
-            alpha_mode: wgpu::CompositeAlphaMode::Auto,
-        };
-        surface.configure(&device, &config);
+        let renderkit = RenderKit::new(window).await;
 
         // image-loading
 
@@ -114,7 +89,7 @@ impl State {
 
         camera_uniform.update_view_proj(&camera);
 
-        let camera_buffer = device.create_buffer_init(
+        let camera_buffer = renderkit.gpu.device.create_buffer_init(
             &wgpu::util::BufferInitDescriptor{
                 label: Some("Camera Buffer"),
                 contents: bytemuck::cast_slice(&[camera_uniform]),

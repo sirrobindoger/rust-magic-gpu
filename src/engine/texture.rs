@@ -1,14 +1,49 @@
 use image::GenericImageView;
 use anyhow::*;
 
+use super::renderkit::Renderable;
+
+
 pub struct Texture {
     pub texture: wgpu::Texture,
     pub view: wgpu::TextureView,
     pub sampler: wgpu::Sampler,
 }
 
+impl Renderable for Texture {
+    fn register_bind_groups(&self, device: wgpu::Device) -> wgpu::BindGroupLayout {
+        let texture_bind_group_layout =
+            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+                entries: &[
+                    wgpu::BindGroupLayoutEntry {
+                        binding: 0,
+                        visibility: wgpu::ShaderStages::FRAGMENT,
+                        ty: wgpu::BindingType::Texture {
+                            multisampled: false,
+                            view_dimension: wgpu::TextureViewDimension::D2,
+                            sample_type: wgpu::TextureSampleType::Float { filterable: true },
+                        },
+                        count: None,
+                    },
+                    wgpu::BindGroupLayoutEntry {
+                        binding: 1,
+                        visibility: wgpu::ShaderStages::FRAGMENT,
+                        ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+                        count: None,
+                    },
+                ],
+                label: Some("texture_bind_group_layout"),
+            });
+            texture_bind_group_layout
+    }
+
+    fn render(&self, render_pass: &mut wgpu::RenderPass) {
+        todo!()
+    }
+}
+
 impl Texture {
-    pub fn from_bytes(
+    fn from_bytes(
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         bytes: &[u8],
@@ -18,7 +53,7 @@ impl Texture {
         Self::from_image(device, queue, &img, Some(label))
     }
 
-    pub fn from_image(
+    fn from_image(
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         img: &image::DynamicImage,
@@ -90,6 +125,8 @@ impl Texture {
                 ..Default::default()
             }
         );
+
+
         Ok(Self {
             texture: diffuse_texture,
             view: diffuse_texture_view,
