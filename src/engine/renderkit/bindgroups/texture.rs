@@ -1,4 +1,5 @@
-use crate::engine::texture::Texture;
+use crate::engine::renderkit::texture::Texture;
+
 
 pub struct TextureBindGroup {
     pub bind_group_layout: wgpu::BindGroupLayout,

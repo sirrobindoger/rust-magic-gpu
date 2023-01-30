@@ -1,8 +1,8 @@
 use wgpu::{BindGroupLayout, DepthStencilState, FragmentState, VertexState};
 
 pub struct PipelineHandle {
-    pipeline: wgpu::RenderPipeline,
-    pipeline_layout: wgpu::PipelineLayout,
+    pub pipeline: wgpu::RenderPipeline,
+    pub pipeline_layout: wgpu::PipelineLayout,
 }
 
 impl PipelineHandle {

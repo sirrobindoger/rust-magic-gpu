@@ -1,45 +1,12 @@
-use image::GenericImageView;
 use anyhow::*;
 
-use super::renderkit::Renderable;
+
 
 
 pub struct Texture {
     pub texture: wgpu::Texture,
     pub view: wgpu::TextureView,
     pub sampler: wgpu::Sampler,
-}
-
-impl Renderable for Texture {
-    fn register_bind_groups(&self, device: wgpu::Device) -> wgpu::BindGroupLayout {
-        let texture_bind_group_layout =
-            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-                entries: &[
-                    wgpu::BindGroupLayoutEntry {
-                        binding: 0,
-                        visibility: wgpu::ShaderStages::FRAGMENT,
-                        ty: wgpu::BindingType::Texture {
-                            multisampled: false,
-                            view_dimension: wgpu::TextureViewDimension::D2,
-                            sample_type: wgpu::TextureSampleType::Float { filterable: true },
-                        },
-                        count: None,
-                    },
-                    wgpu::BindGroupLayoutEntry {
-                        binding: 1,
-                        visibility: wgpu::ShaderStages::FRAGMENT,
-                        ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
-                        count: None,
-                    },
-                ],
-                label: Some("texture_bind_group_layout"),
-            });
-            texture_bind_group_layout
-    }
-
-    fn render(&self, render_pass: &mut wgpu::RenderPass) {
-        todo!()
-    }
 }
 
 impl Texture {

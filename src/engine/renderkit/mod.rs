@@ -10,11 +10,13 @@ use self::{pipelinehandle::PipelineHandle, bindgroups::BindGroups};
 
 mod bindgroups;
 mod gpuhandle;
+mod texture;
 mod pipelinehandle;
+mod buffers;
+
 
 pub trait Renderable {
     fn render(&self, render_pass: &mut wgpu::RenderPass);
-    fn register_bind_groups(&self, device: wgpu::Device) -> wgpu::BindGroupLayout;
 }
 
 pub struct RenderKit {
@@ -92,41 +94,14 @@ impl RenderKit {
                 depth_stencil_attachment: None,
             });
 
-            for renderable in self.renderables.iter() {
-                renderable.render(&mut render_pass);
-            }
+            render_pass.set_pipeline(&self.pipeline.pipeline);
+            
+
+            
         }
 
         self.gpu.queue.submit(std::iter::once(encoder.finish()));
         Ok(())
-    }
-
-    // create a bind  group layout and bind group
-    fn create_bind_group(&mut self) {
-        let texture_bind_group_layout =
-            self.gpu.device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-                entries: &[
-                    wgpu::BindGroupLayoutEntry {
-                        binding: 0,
-                        visibility: wgpu::ShaderStages::FRAGMENT,
-                        ty: wgpu::BindingType::Texture {
-                            multisampled: false,
-                            view_dimension: wgpu::TextureViewDimension::D2,
-                            sample_type: wgpu::TextureSampleType::Float { filterable: true },
-                        },
-                        count: None,
-                    },
-                    wgpu::BindGroupLayoutEntry {
-                        binding: 1,
-                        visibility: wgpu::ShaderStages::FRAGMENT,
-                        // This should match the filterable field of the
-                        // corresponding Texture entry above.
-                        ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
-                        count: None,
-                    },
-                ],
-                label: Some("texture_bind_group_layout"),
-            });
     }
 
     fn create_vertex_buffer(&self, data: &[u8]) {

@@ -1,4 +1,4 @@
-use wgpu::Buffer;
+use wgpu::{Buffer, RenderPass};
 
 
 pub struct CameraBindGroup {
@@ -37,4 +37,5 @@ impl CameraBindGroup {
         });
         camera_bind_group
     }
+
 }

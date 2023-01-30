@@ -1,3 +1,3 @@
 
 pub mod renderkit;
-pub mod texture;
+pub mod resource;
