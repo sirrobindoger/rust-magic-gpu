@@ -1,3 +1,7 @@
+use wgpu::util::DeviceExt;
+
+use crate::engine::renderkit::gpuhandle::GPUHandle;
+
 use super::Vertex;
 
 #[repr(C)]
@@ -15,5 +19,16 @@ impl Vertex for ModelVertex {
             step_mode: wgpu::VertexStepMode::Vertex,
             attributes: &wgpu::vertex_attr_array![0 => Float32x3, 1 => Float32x2, 2 => Float32x3],
         }
+    }
+}
+
+impl ModelVertex {
+    pub fn new_buffer(gpu : &GPUHandle , vertices: &[Self]) -> wgpu::Buffer {
+        let vertex_buffer = gpu.device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("Vertex Buffer"),
+            contents: bytemuck::cast_slice(vertices),
+            usage: wgpu::BufferUsages::VERTEX,
+        });
+        vertex_buffer
     }
 }

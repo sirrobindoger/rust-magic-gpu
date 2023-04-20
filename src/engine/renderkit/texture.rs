@@ -1,5 +1,7 @@
 use anyhow::*;
 
+use crate::engine::{resource::load_binary, renderkit::gpuhandle::GPUHandle};
+
 
 
 
@@ -10,6 +12,15 @@ pub struct Texture {
 }
 
 impl Texture {
+
+    pub async fn load_texture(
+        file_name: &str,
+        gpu: &GPUHandle,
+    ) -> anyhow::Result<Texture> {
+        let data = load_binary(file_name).await?;
+        Texture::from_bytes(&gpu.device, &gpu.queue, &data, file_name)
+    }
+
     fn from_bytes(
         device: &wgpu::Device,
         queue: &wgpu::Queue,
@@ -93,6 +104,9 @@ impl Texture {
             }
         );
 
+
+
+ 
 
         Ok(Self {
             texture: diffuse_texture,

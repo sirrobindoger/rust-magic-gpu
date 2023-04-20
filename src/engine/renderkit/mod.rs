@@ -13,7 +13,7 @@ mod gpuhandle;
 mod texture;
 mod pipelinehandle;
 mod buffers;
-
+mod model;
 
 pub trait Renderable {
     fn render(&self, render_pass: &mut wgpu::RenderPass);
@@ -23,7 +23,7 @@ pub struct RenderKit {
     pipeline: PipelineHandle,
     renderables: Vec<Box<dyn Renderable>>,
     bindgroups: BindGroups,
-    pub gpu: GPUHandle
+    pub gpu: GPUHandle,
 }
 
 impl RenderKit {
@@ -118,6 +118,10 @@ impl RenderKit {
             contents: data,
             usage: wgpu::BufferUsages::INDEX,
         });
+    }
+
+    fn create_new_model(&self, filename : &str) {
+        let model = model::Model::new(filename, &self.gpu);
     }
     
 }

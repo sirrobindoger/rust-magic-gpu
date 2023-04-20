@@ -8,4 +8,4 @@ pub trait Index {
     fn desc() -> wgpu::IndexFormat;
 }
 
-mod modelvertex;
+pub mod modelvertex;
